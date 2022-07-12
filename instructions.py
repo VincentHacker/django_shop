@@ -583,4 +583,48 @@ schema_view = get_schema_view(
 ## postgres://yyrgwvjovdbudf:7cc4d41f54cec5d621f3f36925bc74364df052f23f07ea5bc2f0a1e74fc4e995@ec2-3-217-14-181.compute-1.amazonaws.com:5432/d29335ei3o5qk8
 
 
+# HEROKU
+# зарегистрироваться (если беспл тариф, то макс до 5 приложений)
+
+# заходим в терминал из папки проекта
+# скачать Heroku CLI (https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
+'''sudo snap install heroku --classic'''
+
+# ввести в терминале
+'''heroku login'''
+# в открывшемся окне нажать на кнопку log in
+
+# в терминале (в корневой папке проекта)
+'''heroku create''' # подвязывается гит (появляется ссылка на гит репозиторий)
+
+# Проверить список удаленных репозиториев
+'''git remote -v'''
+
+# В requirements.txt указываем gunicorn, whitenoise
+
+# settings.py добавляем в MIDDLEWARES строку:
+'''whitenoise.middleware.WhiteNoiseMiddleware'''
+
+# в корень проекта добавить Procfile, где указать строку
+'''web: gunicorn shop.wsgi'''
+# и runtime.txt, где:
+'''python-3.9.5'''
+
+# создаем БД в heroku во вкладке resources -> add ons -> heroku postgres
+# (если используется переменная окружения) добавить во вкладке settings.py -> config vars переменные окружения
+
+# git remote ??
+# git add .
+# git commit -m 'comment'
+# git push heroku master
+
+'''
+heroku run python manage.py migrate
+heroku run python manage.py createsuperuser
+'''
+
+
+
 # 127.0.0.1 localhost cryptic-tundra-91979.herokuapp.com
+
+# heroku run python manage.py createsuperuser

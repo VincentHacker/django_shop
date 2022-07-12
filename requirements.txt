@@ -9,5 +9,6 @@ python-slugify
 drf-yasg
 gunicorn
 django-cors-headers
+whitenoise
 # django-heroku
 #pip install -r requirements.txt

@@ -15,11 +15,12 @@ class Category(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100, blank=True) # то же что и CharField, только не разрешает использовать некоторые символы(есть проверки)
+    # slug = models.SlugField(max_length=100, blank=True) # то же что и CharField, только не разрешает использовать некоторые символы(есть проверки)
+    slug = models.SlugField(max_length=100)
 
     def __str__(self) -> str:
         return self.name
-
+'''
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -28,7 +29,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-
+'''
 
 class Product(models.Model):
     name = models.CharField(max_length=100)

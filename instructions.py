@@ -581,3 +581,6 @@ schema_view = get_schema_view(
 
 
 ## postgres://yyrgwvjovdbudf:7cc4d41f54cec5d621f3f36925bc74364df052f23f07ea5bc2f0a1e74fc4e995@ec2-3-217-14-181.compute-1.amazonaws.com:5432/d29335ei3o5qk8
+
+
+# 127.0.0.1 localhost cryptic-tundra-91979.herokuapp.com

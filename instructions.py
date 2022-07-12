@@ -628,3 +628,18 @@ heroku run python manage.py createsuperuser
 # 127.0.0.1 localhost cryptic-tundra-91979.herokuapp.com
 
 # heroku run python manage.py createsuperuser
+'''
+(env) atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week8/py20_shop$ heroku run python manage.py createsuperuser
+ ›   Warning: heroku update available from 7.60.1 to 7.60.2.
+Running python manage.py createsuperuser on ⬢ obscure-citadel-48993... up, run.7317 (Free)
+Email: test_heroku@gmail.com
+Name: test_user_heroku                
+Password: #'1'
+Password (again): 
+This password is too short. It must contain at least 8 characters.
+This password is too common.
+This password is entirely numeric.
+Bypass password validation and create user anyway? [y/N]: y
+Superuser created successfully.
+'''
+

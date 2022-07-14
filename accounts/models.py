@@ -58,14 +58,15 @@ class User(AbstractBaseUser):
         self.save()
         return code
 
-    def send_activation_code(self):
-        from django.core.mail import send_mail
-        activation_link = f'http://127.0.0.1:8000/account/activation/{self.activation_code}'
-        send_mail(
-            'Account activation',         
-            message=activation_link,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[self.email],
-            fail_silently=False
-        )
+# added to celery task
+    # def send_activation_code(self):
+    #     from django.core.mail import send_mail
+    #     activation_link = f'http://127.0.0.1:8000/account/activation/{self.activation_code}'
+    #     send_mail(
+    #         'Account activation',         
+    #         message=activation_link,
+    #         from_email=settings.EMAIL_HOST_USER,
+    #         recipient_list=[self.email],
+    #         fail_silently=False
+    #     )
 

@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'accounts',
     'product',
     'orders',
+
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -226,3 +229,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     # 'https://www.thunderclient.com/',
 # ]
 
+CELERY_BROKER_URL = 'redis://:p7cc8a33bddaaf8dc984a5623ffc5695d6aa10c1b4e14f1e8b1146d783accddeb@ec2-3-214-136-6.compute-1.amazonaws.com:16440'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://:p7cc8a33bddaaf8dc984a5623ffc5695d6aa10c1b4e14f1e8b1146d783accddeb@ec2-3-214-136-6.compute-1.amazonaws.com:16440'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'UTC'
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = '6379'

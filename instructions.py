@@ -590,6 +590,8 @@ schema_view = get_schema_view(
 # скачать Heroku CLI (https://devcenter.heroku.com/articles/getting-started-with-python#set-up)
 '''sudo snap install heroku --classic'''
 
+
+
 # ввести в терминале
 '''heroku login'''
 # в открывшемся окне нажать на кнопку log in
@@ -610,8 +612,15 @@ schema_view = get_schema_view(
 # и runtime.txt, где:
 '''python-3.9.5'''
 
+# https://dashboard.heroku.com/apps
+
 # создаем БД в heroku во вкладке resources -> add ons -> heroku postgres
 # (если используется переменная окружения) добавить во вкладке settings.py -> config vars переменные окружения
+
+# в https://djecrety.ir/ генерируем secret_key и заполняем settings
+
+# в https://dashboard.heroku.com/apps выбираем obscure-citadel-48993 и нажимаем на open app
+
 
 # git remote ??
 # git add .
@@ -642,4 +651,77 @@ This password is entirely numeric.
 Bypass password validation and create user anyway? [y/N]: y
 Superuser created successfully.
 '''
+
+'''
+atai@atai-Aspire-A315-55G:~$ cd Desktop/Bootcamp/week10
+atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$ ls
+atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$ sudo snap install heroku --classic
+[sudo] password for atai: 
+heroku v7.60.1 from Heroku✓ installed
+atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$ heroku login
+ ›   Warning: Our terms of service have changed: 
+ ›   https://dashboard.heroku.com/terms-of-service
+heroku: Press any key to open up the browser to login or q to exit: 
+Opening browser to https://cli-auth.heroku.com/auth/cli/browser/4706d003-8609-46dd-8a5e-ae034155c943?requestor=SFMyNTY.g2gDbQAAAA4yMTIuNDIuMTAzLjEzOG4GAGg3tfCBAWIAAVGA.lNxjhr9LfxVPe0w4KK5OmJ4OPrsWIpTACU5XZkTd8-M
+Logging in... done
+Logged in as kaizhi2112@gmail.com
+atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$ heroku create
+ ›   Warning: heroku update available from 7.60.1 to 7.60.2.
+Creating app... done, ⬢ obscure-citadel-48993
+https://obscure-citadel-48993.herokuapp.com/ | https://git.heroku.com/obscure-citadel-48993.git
+atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$ 
+
+'''
+
+# https://dashboard.heroku.com/apps/obscure-citadel-48993/settings
+# генератор secret key
+# https://djecrety.ir/
+
+# проверка деплоя
+'''https://obscure-citadel-48993.herokuapp.com/admin/'''
+
+# CELERY
+# берет нагрузку на себя и позволяет работать быстрее
+# документация:
+# https://docs.celeryq.dev/en/stable/
+# https://django.fun/tutorials/django-i-celery-1-ustanovka/
+
+
+# redis
+# 1. установить redis
+'''sudo apt install redis-server'''
+# 2. запустить redis-server
+# 3. в requirements.txt установить celery
+
+# ---------------
+# стянуть mahr проект с https://github.com/TimaDootaliev?tab=repositories
+# 1. mahr поменять на название своего проекта
+# 2. __init__.py
+# 3. классы account - tasks.py обернуты в декораторы
+# (для хакатона: в accounts views есть декоратор сваггера. Скопипастить оттуда и вставить в проект, чтобы показывалась документация)
+# ---------------
+
+# 4. в основной папке проекта (shop) создать _celery.py. 
+# 5. В этой же папке в файле __init__.py (пустой) нужно указать celery application. 
+'''
+from ._celery import app as celery_app
+__all__ = ['celery_app']
+'''
+# 6. в settings.py указать настройки для celery и redis
+'''
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+'''
+# 7. В нужном приложении (например, accounts) создать файл tasks.py. В нем нужно определить функцию, которая должна принимать простые объекты (числа, строки, список словарь, boolean. То, что можно сериализовать в json). В этой функции будет логика действия (отправка почты)
+# функцию отправки почты в accounts/models.py (закомментировать) скопипастить в tasks.py и обернуть декоратором 
+
+# При вызове таска вызывать его через delay()
+
+
 

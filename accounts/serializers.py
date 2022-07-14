@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.core.mail import send_mail
 
+from accounts.tasks import send_activation_mail
+
 User = get_user_model()
 
 
@@ -26,7 +28,9 @@ class RegistrationSerializer(serializers.Serializer):
     def create(self):
         user = User.objects.create_user(**self.validated_data) # имя, email и pswd - распаковали в словарь
         user.create_activation_code()
-        user.send_activation_code()
+        # user.send_activation_code()
+        send_activation_mail.delay(user.email, user.activation_code) # добавили для celery
+        return user
 
 
 # class ActivationSerializer(serializers.Serializer):

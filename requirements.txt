@@ -2,11 +2,13 @@ Django==4.0.5
 djangorestframework==3.13.1
 psycopg2-binary==2.9.3
 Pillow==9.1.1
+
 django-filter
 python-decouple
 djangorestframework_simplejwt
 python-slugify
 drf-yasg
+
 gunicorn
 django-cors-headers
 whitenoise

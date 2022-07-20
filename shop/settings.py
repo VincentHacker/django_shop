@@ -229,12 +229,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     # 'https://www.thunderclient.com/',
 # ]
 
-CELERY_BROKER_URL = 'redis://:p7cc8a33bddaaf8dc984a5623ffc5695d6aa10c1b4e14f1e8b1146d783accddeb@ec2-3-214-136-6.compute-1.amazonaws.com:16440'
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://:p7cc8a33bddaaf8dc984a5623ffc5695d6aa10c1b4e14f1e8b1146d783accddeb@ec2-3-214-136-6.compute-1.amazonaws.com:16440'
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'UTC'
-# REDIS_HOST = 'localhost'
-# REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+
+
+# CELERY_RESULT_BACKEND = 'redis://:pe6de852b5bd16e9d9139fda81e1c8760cfb85211363e614d5ea752f9de90323e@ec2-34-192-190-27.compute-1.amazonaws.com:14310'
+# REDIS_HOST = 'ec2-3-214-136-6.compute-1.amazonaws.com'
+# REDIS_PORT = '16440'
+

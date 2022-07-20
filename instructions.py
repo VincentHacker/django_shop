@@ -681,33 +681,52 @@ atai@atai-Aspire-A315-55G:~/Desktop/Bootcamp/week10$
 '''https://obscure-citadel-48993.herokuapp.com/admin/'''
 
 # CELERY
-# берет нагрузку на себя и позволяет работать быстрее
-# документация:
+# Берет нагрузку определенного функционала на себя и позволяет работать быстрее
+# Документация + tutorials:
 # https://docs.celeryq.dev/en/stable/
 # https://django.fun/tutorials/django-i-celery-1-ustanovka/
+# https://www.codingforentrepreneurs.com/blog/celery-redis-django/
 
+# Подключим celery на примере django_shop (или PY20_shop)
 
-# redis
-# 1. установить redis
-'''sudo apt install redis-server'''
-# 2. запустить redis-server
-# 3. в requirements.txt установить celery
-
-# ---------------
-# стянуть mahr проект с https://github.com/TimaDootaliev?tab=repositories
-# 1. mahr поменять на название своего проекта
-# 2. __init__.py
-# 3. классы account - tasks.py обернуты в декораторы
-# (для хакатона: в accounts views есть декоратор сваггера. Скопипастить оттуда и вставить в проект, чтобы показывалась документация)
-# ---------------
-
-# 4. в основной папке проекта (shop) создать _celery.py. 
-# 5. В этой же папке в файле __init__.py (пустой) нужно указать celery application. 
+# 1. Указать в requirements.txt:
 '''
-from ._celery import app as celery_app
+celery==5.2.7
+redis==4.3.3
+django-celery-beat
+django-celery-results
+'''
+# далее pip install -r requirements.txt
+
+# 2. В settings.py в INSTALLED_APPS добавить:
+'''
+    'django_celery_beat',
+    'django_celery_results',
+'''
+
+# 3. В основной папке проекта (shop) создать celery.py и прописать:
+
+'''
+import os
+from celery import Celery
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop.settings')
+
+app = Celery('shop')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
+app.conf.update(result_expires=3600, enable_utc=True, timezone='UTC')
+app.conf.beat_schedule = {}
+app.conf.timezone = 'UTC'
+''' 
+
+# 4. В этой же папке (shop) в файле __init__.py нужно указать celery application. 
+'''
+from .celery import app as celery_app
 __all__ = ['celery_app']
 '''
-# 6. в settings.py указать настройки для celery и redis
+
+# 5. в settings.py указать настройки для celery и redis (локально)
 '''
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
@@ -718,10 +737,77 @@ CELERY_TIMEZONE = 'UTC'
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 '''
-# 7. В нужном приложении (например, accounts) создать файл tasks.py. В нем нужно определить функцию, которая должна принимать простые объекты (числа, строки, список словарь, boolean. То, что можно сериализовать в json). В этой функции будет логика действия (отправка почты)
-# функцию отправки почты в accounts/models.py (закомментировать) скопипастить в tasks.py и обернуть декоратором 
 
-# При вызове таска вызывать его через delay()
+# 6. В нужном приложении (например, accounts) создать файл tasks.py. В нем нужно определить функцию, которая должна принимать простые объекты (числа, строки, список словарь, boolean. То, что можно сериализовать в json). В этой функции будет логика действия (например, отправка почты)
+# В accounts/models.py функцию отправки почты скопировать и закомментировать (или удалить):
+'''
+    # def send_activation_code(self):
+    #     from django.core.mail import send_mail
+    #     activation_link = f'http://127.0.0.1:8000/account/activation/{self.activation_code}'
+    #     send_mail(
+    #         'Account activation',         
+    #         message=activation_link,
+    #         from_email=settings.EMAIL_HOST_USER,
+    #         recipient_list=[self.email],
+    #         fail_silently=False
+    #     )
+'''
+ 
+# a) Эту функцию вставить в tasks.py 
+# b) обернуть декоратором @shared_task
+# c) в функцию добавить параметры email и activation_code и убрать в теле self
+# d) указать ссылку активации (на локальном или удаленном сервере)
+'''
+from celery import shared_task
+from django.conf import settings
+
+
+@shared_task # чтобы функция стала таском
+def send_activation_mail(email, activation_code):
+    from django.core.mail import send_mail
+    activation_link = f'http://127.0.0.1:8000/account/activation/{activation_code}'
+    send_mail(
+        'Account activation',         
+        message=activation_link,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[email],
+        fail_silently=False
+    )
+'''
+
+# 7. в serializers.py в функции create закомментировать (или удалить):
+'''
+        # user.send_activation_code()
+'''
+# и вызвать таск через delay()
+'''
+        send_activation_mail.delay(user.email, user.activation_code)
+'''
+
+# 8. создать миграции, смигрировать и запустить сервер (локально)
+'''
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+'''
+
+# 9. открыть параллельный терминал и запустить celery:
+'''
+celery -A shop worker --beat -l info -S django
+'''
+
+# 10. проверить функционал (отправки почты)
+
+
+# ---------------
+# стянуть mahr проект с https://github.com/TimaDootaliev?tab=repositories
+# 1. mahr поменять на название своего проекта
+# 2. __init__.py
+# 3. классы account - tasks.py обернуты в декораторы
+# (для хакатона: в accounts views есть декоратор сваггера. Скопипастить оттуда и вставить в проект, чтобы показывалась документация)
+# ---------------
 
 
 
+'''sudo apt install redis-server'''
+# 2. запустить redis-server
